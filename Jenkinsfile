@@ -19,12 +19,15 @@ pipeline {
     }
 
     // --- NEW STAGE ADDED HERE ---
-    stage('Test') {
-      steps {
-        // This spins up the container just to run the tests
-        sh 'docker run --rm ${IMAGE_NAME}:latest pytest --junitxml=test-results.xml'
-      }
+  stage('Test') {
+    steps {
+        sh '''
+        pip install pytest pytest-xml-reporting
+        pytest
+        '''
     }
+}
+
     // ----------------------------
     
     stage('Push to Dockerhub') {
