@@ -14,15 +14,22 @@ pipeline {
     
     stage('Build Docker Images') {
       steps {
-        // Changed 'bat' to 'sh' and '%VAR%' to '${VAR}'
         sh 'docker build -t ${IMAGE_NAME}:latest .'
       }
     }
+
+    // --- NEW STAGE ADDED HERE ---
+    stage('Test') {
+      steps {
+        // This spins up the container just to run the tests
+        sh 'docker run --rm ${IMAGE_NAME}:latest pytest --junitxml=test-results.xml'
+      }
+    }
+    // ----------------------------
     
     stage('Push to Dockerhub') {
       steps {
         withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-          // Changed 'bat' to 'sh' and adjusted variable syntax for shell
           sh """
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
             docker push ${IMAGE_NAME}:latest
