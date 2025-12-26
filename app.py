@@ -1,10 +1,17 @@
-from flask import Flask, render_template
+# Use official Python image
+FROM python:3.10-slim
 
-app = Flask(__name__)
+# Set working directory
+WORKDIR /app
 
-@app.route("/")
-def home():
-    return render_template("index.html")
+# Copy app files
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+COPY . .
+
+# Expose port Flask runs on
+EXPOSE 5000
+
+# Run the application
+CMD ["python", "app.py"]
