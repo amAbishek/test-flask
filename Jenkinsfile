@@ -1,7 +1,7 @@
 pipeline{
   agent any
   environment{
-    IMAGE_NAME - 'iamabi/test-flask'
+    IMAGE_NAME = 'iamabi/test-flask'
   }
   stages{
     stage('Checkout git'){
